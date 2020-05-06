@@ -183,7 +183,7 @@ def run(args: DictConfig) -> None:
             raise Exception("scheduler not implemented.")
 
         optimal_loss = 1e5
-        for epoch in range(1, args.n_epochs + 1):
+        for epoch in range(1, args.epochs + 1):
             loss, acc = train_epoch(classifier, train_loader, args, optimizer, scheduler)
             lr = scheduler.get_lr()[0]
             logger.info('Epoch {}, lr:{:.4f}, loss:{:.4f}, Acc:{:.4f}'.format(epoch, lr, loss, acc))
