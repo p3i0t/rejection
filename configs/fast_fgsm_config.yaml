@@ -9,7 +9,7 @@ hydra:
     #dir: logs/${dataset}
     dir: logs/${model_type}/${dataset}
 
-model_type:base
+model_type: base
 
 dataset: cifar10
 data_dir: data
