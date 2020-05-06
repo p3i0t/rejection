@@ -1,0 +1,44 @@
+hydra:
+  job_logging:
+#    formatters:
+#      simple:
+#        format: '[]'
+    root:
+      handlers: [file, console]  # logging to file only.
+  run:
+    #dir: logs/${dataset}
+    dir: logs/${model_type}/${dataset}
+
+model_type:base
+
+dataset: cifar10
+data_dir: data
+
+
+# training parameters
+lr_min: 0.0
+lr_max: 0.2
+learning_rate: 0.1
+momentum: 0.9
+weight_decay: 5e-4
+epsilon: 8/255
+epsilon_iter: 10/255
+pgd_epsilon_iter: 2/255  # for PGD evaluation
+
+
+cifar10:
+  n_classes: 10
+
+cifar100:
+  n_classes: 100
+
+n_batch_train: 128
+n_batch_test: 200
+epochs: 15
+lr_schedule: cyclic
+early_stop: True
+
+seed: 1234
+device: cuda
+
+inference: False
