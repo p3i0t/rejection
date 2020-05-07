@@ -7,7 +7,6 @@ import logging
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from torch.optim.lr_scheduler import MultiStepLR
 from models import resnet18, resnet34, resnet50
 from utils import cal_parameters, get_dataset, AverageMeter
 
