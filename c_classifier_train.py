@@ -20,10 +20,6 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 logger = logging.getLogger(__name__)
 
 
-def clamp(x, lower_limit, upper_limit):
-    return torch.max(torch.min(x, upper_limit), lower_limit)
-
-
 CORRUPTIONS = [
     'gaussian_noise', 'shot_noise', 'impulse_noise', 'defocus_blur',
     'glass_blur', 'motion_blur', 'zoom_blur', 'snow', 'frost', 'fog',
@@ -135,12 +131,6 @@ def train_epoch(classifier, train_loader, args, optimizer, scheduler):
 
 
 def eval_epoch(model, data_loader, args):
-    # """Self-implemented PGD evaluation"""
-    # eps = eval(args.epsilon)
-    # eps_iter = eval(args.pgd_epsilon_iter)
-    # attack_iters = 40
-    # restarts = 1
-
     loss_meter = AverageMeter('loss')
     acc_meter = AverageMeter('Acc')
     model.eval()
