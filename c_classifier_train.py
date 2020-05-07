@@ -262,7 +262,7 @@ def run(args: DictConfig) -> None:
             optimizer,
             lr_lambda=lambda step: get_lr(  # pylint: disable=g-long-lambda
                 step,
-                args.n_epochs * len(train_loader),
+                args.epochs * len(train_loader),
                 1,  # lr_lambda computes multiplicative factor
                 1e-6 / args.learning_rate))
 
