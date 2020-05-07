@@ -214,7 +214,7 @@ def run(args: DictConfig) -> None:
         test_data = datasets.CIFAR10(
             data_dir, train=False, transform=test_transform, download=True)
         base_c_path = os.path.join(data_dir, 'CIFAR-10-C/')
-        args.n_classes = 10
+        # args.n_classes = 10
     else:
         train_data = datasets.CIFAR100(
             data_dir, train=True, transform=train_transform, download=True)
@@ -222,7 +222,7 @@ def run(args: DictConfig) -> None:
             data_dir, train=False, transform=test_transform, download=True)
 
         base_c_path = os.path.join(data_dir, 'CIFAR-100-C/')
-        args.n_classes = 100
+        # args.n_classes = 100
 
     train_data = AugMixDataset(train_data, preprocess, args, args.no_jsd)
     train_loader = DataLoader(
