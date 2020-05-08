@@ -1,0 +1,44 @@
+hydra:
+  job_logging:
+    root:
+      handlers: [file, console]  # logging to file only.
+  run:
+    #dir: logs/${dataset}
+    dir: logs/${model_type}/${dataset}
+
+model_type: sdim
+base_type: normal # at, c
+dataset: cifar10
+
+data_dir: data
+
+# model parameters
+#classifier_name: resnet18  # base classifier
+mi_units: 64
+
+alpha: 1
+beta: 1
+gamma: 1
+
+cifar10:
+  n_classes: 10
+  rep_size: 10
+  margin: 5
+
+cifar100:
+  n_classes: 100
+  rep_size: 100 
+  margin: 2
+
+
+inference: False  # False for training, True for inference.
+
+# training parameters
+epochs: 25
+n_batch_train: 128
+n_batch_test: 200
+optimizer: adam
+learning_rate: 0.001
+seed: 1234
+n_gpu: 1
+device: cuda
