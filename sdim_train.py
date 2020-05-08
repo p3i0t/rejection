@@ -183,7 +183,6 @@ def run_epoch(sdim, data_loader, args, optimizer=None):
 
 
 def train(sdim, optimizer, args):
-    sdim.disc_classifier.requires_grad = False
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
