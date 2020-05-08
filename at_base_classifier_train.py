@@ -161,7 +161,7 @@ def run(args: DictConfig) -> None:
     test_loader = DataLoader(dataset=test_data, batch_size=args.n_batch_test, shuffle=False)
 
     if args.inference is True:
-        classifier.load_state_dict(torch.load('{}_at.pth'.format(args.classifier_name)))
+        classifier.load_state_dict(torch.load('resnet18_at.pth'))
         logger.info('Load classifier from checkpoint')
     else:
         optimizer = torch.optim.SGD(
@@ -193,8 +193,8 @@ def run(args: DictConfig) -> None:
                 torch.save(classifier.state_dict(), 'resnet18_at.pth')
 
     clean_loss, clean_acc = eval_epoch(classifier, test_loader, args, adversarial=False)
-    adv_loss, adv_acc = eval_epoch(classifier, test_loader, args, adversarial=True)
     logger.info('Clean loss: {:.4f}, acc: {:.4f}'.format(clean_loss, clean_acc))
+    adv_loss, adv_acc = eval_epoch(classifier, test_loader, args, adversarial=True)
     logger.info('Adversarial loss: {:.4f}, acc: {:.4f}'.format(adv_loss, adv_acc))
 
 
