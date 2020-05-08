@@ -144,7 +144,7 @@ def get_lr(step, total_steps, lr_max, lr_min):
     return lr_min + (lr_max - lr_min) * 0.5 * (1 + np.cos(step / total_steps * np.pi))
 
 
-@hydra.main(config_path='configs/fast_fgsm_config.yaml')
+@hydra.main(config_path='configs/at_base_config.yaml')
 def run(args: DictConfig) -> None:
     assert torch.cuda.is_available()
     torch.manual_seed(args.seed)

@@ -282,7 +282,7 @@ def run(args: DictConfig) -> None:
                 torch.save(classifier.state_dict(), 'resnet18_c.pth')
 
     test_c_acc = eval_c(classifier, base_c_path, args)
-    logger.info('Mean Corruption Error:{:.4f}'.format(test_c_acc))
+    logger.info('Mean Corruption Error:{:.4f}'.format(1 - test_c_acc))
 
 
 if __name__ == '__main__':

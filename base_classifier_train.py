@@ -7,7 +7,7 @@ import logging
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from torch.optim.lr_scheduler import MultiStepLR
+from torch.optim.lr_scheduler import LambdaLR
 from models import resnet18, resnet34, resnet50
 from utils import cal_parameters, get_dataset, AverageMeter
 
@@ -46,17 +46,28 @@ def run_epoch(classifier, data_loader, args, optimizer=None, scheduler=None):
     return loss_meter.avg, acc_meter.avg
 
 
+def get_lr(step, total_steps, lr_max, lr_min):
+    """Compute learning rate according to cosine annealing schedule."""
+    return lr_min + (lr_max - lr_min) * 0.5 * (1 + np.cos(step / total_steps * np.pi))
+
+
 def train(classifier, train_loader, test_loader, args):
     optimizer = torch.optim.SGD(classifier.parameters(), lr=args.learning_rate, momentum=args.momentum,
                                 weight_decay=args.decay, nesterov=True)
 
     best_train_loss = np.inf
+    scheduler = LambdaLR(
+        optimizer,
+        lr_lambda=lambda step: get_lr(  # pylint: disable=g-long-lambda
+            step,
+            args.epochs * len(train_loader),
+            1,  # lr_lambda computes multiplicative factor
+            1e-6 / args.learning_rate))
 
-    lr_steps = args.epochs * len(train_loader)
-    scheduler = MultiStepLR(optimizer, milestones=[lr_steps / 2, lr_steps * 3 / 4], gamma=0.1)
     for epoch in range(1, args.epochs + 1):
         train_loss, train_acc = run_epoch(classifier, train_loader, args, optimizer=optimizer, scheduler=scheduler)
-        logger.info('Epoch: {}, training loss: {:.4f}, acc: {:.4f}.'.format(epoch, train_loss, train_acc))
+        lr = scheduler.get_lr()[0]
+        logger.info('Epoch: {}, lr: {:.4f}, training loss: {:.4f}, acc: {:.4f}.'.format(epoch, lr, train_loss, train_acc))
 
         test_loss, test_acc = run_epoch(classifier, test_loader, args)
         logger.info("Test loss: {:.4f}, acc: {:.4f}".format(test_loss, test_acc))
