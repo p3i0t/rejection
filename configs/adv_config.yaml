@@ -4,7 +4,7 @@ hydra:
       handlers: [file, console]  # logging to file only.
   run:
     #dir: logs/${dataset}
-    dir: attack_logs/${attack}/${dataset}
+    dir: attack_logs/${dataset}
 
 model_type: sdim
 dataset: cifar10
