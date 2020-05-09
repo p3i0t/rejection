@@ -213,7 +213,8 @@ def adv_eval_with_rejection(sdim, adversary, args, thresholds):
         left_acc = (left_pred == left_y).sum().item() / n_correct
         left_error = (left_pred != left_y).sum().item() / n_correct
 
-        assert reject_rate + left_acc + left_error == 1
+        checksum = reject_rate + left_acc + left_error
+        assert abs(checksum - 1) < 0.01, 'sum {} should be 1.'.format(checksum)
         rejection_meter.update(reject_rate, n_correct)
         left_acc_meter.update(left_acc, n_correct)
         left_error_meter.update(left_error, n_correct)
