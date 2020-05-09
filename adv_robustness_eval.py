@@ -137,6 +137,7 @@ def extract_thresholds(sdim, args):
     # Get thresholds
     threshold_list1 = []
 
+    logger.info("Extracting thresholds ...")
     data_dir = hydra.utils.to_absolute_path(args.data_dir)
     for label_id in range(args.get(args.dataset).n_classes):
         # No data augmentation(crop_flip=False) when getting in-distribution thresholds
@@ -158,6 +159,7 @@ def extract_thresholds(sdim, args):
         thresh1 = sorted(in_ll_list)[thresh_idx]
         threshold_list1.append(thresh1)  # class mean as threshold
 
+    logger.info('thresholds extracted!')
     thresholds1 = torch.tensor(threshold_list1).to(args.device)
     return thresholds1
 
@@ -194,7 +196,7 @@ def adv_eval_with_rejection(sdim, adversary, args, thresholds):
         with torch.no_grad():
             class_conditionals = sdim(adv_x)
 
-        pred = class_conditionals.argmax(dim=1)
+        max_class_conditionals, pred = class_conditionals.max(dim=1)
         successful_idx = pred != y   # idx of successful adversarial examples.
         clean_error = successful_idx.sum().item() / n_correct
 
@@ -203,8 +205,8 @@ def adv_eval_with_rejection(sdim, adversary, args, thresholds):
         clean_error_meter.update(clean_error, n_correct)
 
         # filter with thresholds
-        reject_idx = class_conditionals < thresholds[pred]  # idx of successfully rejected samples.
-        left_idx = class_conditionals >= thresholds[pred]  # idx of left samples for eval.
+        reject_idx = max_class_conditionals < thresholds[pred]  # idx of successfully rejected samples.
+        left_idx = max_class_conditionals >= thresholds[pred]  # idx of left samples for eval.
 
         reject_rate = reject_idx.sum().item() / n_correct
         left_pred, left_y = pred[left_idx], y[left_idx]
