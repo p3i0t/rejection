@@ -74,7 +74,7 @@ def train(classifier, train_loader, test_loader, args):
 
         if train_loss < best_train_loss:
             best_train_loss = train_loss
-            save_name = 'resnet18.pth'
+            save_name = 'resnet18_wd{}.pth'.format(args.weight_decay)
             state = classifier.state_dict()
 
             torch.save(state, save_name)
@@ -98,7 +98,7 @@ def run(args: DictConfig) -> None:
     test_loader = DataLoader(dataset=test_data, batch_size=args.n_batch_test, shuffle=False)
 
     if args.inference:
-        save_name = 'resnet18.pth'
+        save_name = 'resnet18_wd{}.pth'.format(args.weight_decay)
         classifier.load_state_dict(torch.load(save_name, map_location=lambda storage, loc: storage))
         loss, acc = run_epoch(classifier, test_loader, args)
         logger.info('Inference, test loss: {:.4f}, Acc: {:.4f}'.format(loss, acc))
